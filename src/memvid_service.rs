@@ -1,4 +1,5 @@
-use memvid_core::Memvid;
+pub mod base;
+
 use rmcp::handler::server::wrapper::Parameters;
 use rmcp::model::{ServerCapabilities, ServerInfo};
 use rmcp::{ServerHandler, tool};
@@ -19,29 +20,13 @@ impl MemvidService {
         }
     }
 
-    #[tool(description = "A test method for MemvidService")]
-    pub fn test_method(&self) -> String {
-        "This is a test method".into()
-    }
-
     #[tool(description = "Create new memory file")]
     pub fn create(
         &self,
         Parameters(CreateParams { filepath }): Parameters<CreateParams>,
     ) -> String {
         tracing::info!("Creating memory file at: {}", filepath);
-        match Memvid::create(&filepath) {
-            Ok(_) => {
-                let msg = format!("Memory file created successfully at: {}", filepath);
-                tracing::info!("{}", msg);
-                msg
-            }
-            Err(e) => {
-                let msg = format!("Failed to create memory file at {}: {:?}", filepath, e);
-                tracing::error!("{}", msg);
-                msg
-            }
-        }
+        base::create(&filepath)
     }
 }
 
