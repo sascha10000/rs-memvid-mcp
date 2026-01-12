@@ -1,5 +1,4 @@
 mod memvid_service;
-mod memvid_wrapper;
 mod types;
 use anyhow::Result;
 use memvid_service::MemvidService;

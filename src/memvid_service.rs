@@ -5,7 +5,7 @@ use rmcp::model::{ServerCapabilities, ServerInfo};
 use rmcp::{ServerHandler, tool};
 use rmcp::{handler::server::tool::ToolRouter, tool_handler, tool_router};
 
-use crate::types::CreateParams;
+use crate::types::{CreateParams, PutBytesParams};
 
 #[derive(Clone, Debug)]
 pub struct MemvidService {
@@ -27,6 +27,18 @@ impl MemvidService {
     ) -> String {
         tracing::info!("Creating memory file at: {}", filepath);
         base::create(&filepath)
+    }
+
+    #[tool(description = "Add data as string to memory file")]
+    pub fn add(
+        &self,
+        Parameters(PutBytesParams { data, options }): Parameters<PutBytesParams>,
+    ) -> String {
+        tracing::info!("Adding data to memory file, size: {} bytes", data.len());
+        match base::put_bytes(data.as_bytes(), options) {
+            Ok(frame_id) => format!("Data added successfully with Frame ID: {}", frame_id),
+            Err(e) => format!("Failed to add data: {:?}", e),
+        }
     }
 }
 
